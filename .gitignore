@@ -1,0 +1,6 @@
+/.idea/
+/node_modules
+/logs
+/download/*
+!/download/*.sh
+
