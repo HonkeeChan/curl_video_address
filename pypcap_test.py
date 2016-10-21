@@ -1,7 +1,7 @@
 #encoding: utf8
 import pcap
 import dpkt
-pc=pcap.pcap("en0")    #注，参数可为网卡名，如eth0
+pc=pcap.pcap("以太网")    #注，参数可为网卡名，如eth0
 #设置监听过滤器 HTTP请求的TCP头为GET 或者 HTTP
 pc.setfilter('tcp[20:2]=0x4745 or tcp[20:2]=0x4854')    
 
