@@ -53,6 +53,7 @@ contactList = []
 
 if __name__ == '__main__':
     print "starting capture"
+    
     for ptime,pdata in pc:    #ptime为收到时间，pdata为收到数据
     #对抓到的以太网V2数据包(raw packet)进行解包
 
