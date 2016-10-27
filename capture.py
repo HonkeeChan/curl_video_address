@@ -9,14 +9,26 @@ import logging
 import requests
 
 class TrafficCapture(object):
-    def __init__(self, netcardName = "eth0", loggingName = "traffic_capture"):
+    def __init__(self, netcardName, title,  loggingName = None):
         self.stopFlag = False
         self.pc = pcap.pcap(netcardName)    #注，参数可为网卡名，如eth0
         self.pc.setfilter('tcp[20:2]=0x4745 or tcp[20:2]=0x4854')  #设置监听过滤器 HTTP请求的TCP头为GET 或者 HTTP
         self.downloadThread = []
         self.downloadedURL = dict()
-        self.contactList = []
+        self.mergeList = []
+        self.title = title.replace("/","_")
+        self.floderName = u"download/" + self.title + u"/"
+        if not os.path.exists(self.floderName):
+            os.makedirs(self.floderName)
 
+        # if loggingName is None:
+        #     self.logger = logging.getLogger("curl_video")
+        #     self.logger.setLevel(logging.DEBUG)      
+        #     formatter = logging.Formatter('%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s')
+        #     self.logger.setFormatter(formatter)
+            
+        # else:
+        #     self.logger = getLogger(loggingName)
 
     
 
@@ -30,7 +42,7 @@ class TrafficCapture(object):
 
     def downloadFile(self, fileurl, storename):
         # logger.info("strat download " + fileurl)
-        os.system("curl -o download/" + storename + " " + fileurl)
+        os.system("curl -o " + storename + " " + fileurl)
         # logger.info("finish download " + fileurl)
 
     def stop(self):
@@ -60,35 +72,43 @@ class TrafficCapture(object):
                             videoUrl = self.wrapDownloadURL(requestUrl)
                             # logger.info(videoUrl) 
                             if(not self.downloadedURL.has_key(videoUrl)):
+                                print videoUrl
                                 # logger.debug("never download this url: " + videoUrl)
                                 nowTime = time.time()
                                 fileName = str(nowTime) + "." + videoUrl.split(".")[-1]
+                                fileName =  self.floderName + fileName
                                 self.downloadedURL[videoUrl] = (nowTime, fileName)
-                                self.contactList.append(fileName)
-                                t = threading.Thread(target=self.downloadFile,args=(videoUrl , fileName))
-                                self.downloadThread.append(t)
-                                t.start()
-                            f = open("download/list.txt", "w")
-                            toWrite = ["file '" + item + "'\n" for item in self.contactList]
-                            f.writelines(toWrite)
-                            f.close()
+                                self.mergeList.append(fileName)
+                                # t = threading.Thread(target=self.downloadFile,args=(videoUrl , fileName))
+                                # self.downloadThread.append(t)
+                                # t.start()
 
-        for t in self.downloadThread:
-            t.join()
+                            # f = open(self.floderName + u"list.txt", "w")
+                            # toWrite = ["file '" + item + "'\n" for item in self.mergeList]
+                            # f.writelines(toWrite)
+                            # f.close()
 
+        # for t in self.downloadThread:
+        #     t.join()
+
+    def getDownloadFiles(self):
+        return self.mergeList
+
+    def getDownloadUrls(self):
+        return [url for (url, filename) in self.downloadedURL.iteritems()]
 
 
 def sleepForWhile(arg):
     sleep(10)
-    arg.stop()
+    # arg.stop()
     print "time over"
     # make a http get request, let the capture thread return
-    sleep(2)
-    a = requests.get("http://www.baidu.com")
+    # sleep(2)
+    # a = requests.get("http://www.baidu.com")
 
 
 if __name__ == '__main__':
-    tc = TrafficCapture("enp5s0")
+    tc = TrafficCapture("enp5s0", u"hello", "hello")
     t = threading.Thread(target=sleepForWhile, args= (tc,))
     t.start()
     tc.start()
