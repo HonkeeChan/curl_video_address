@@ -1,7 +1,7 @@
 var page = require('webpage').create();                                         
 // video url must have http:// suffix
-var videoUrl = phantom.args[0];
-//var videoUrl = "http://v.youku.com/v_show/id_XMTc3NDkwOTE2MA==.html?spm=a2hww.20023042.m_223465.5~5~5~5~5~5~A&from=y1.3-idx-beta-1519-23042.223465.1-1"
+//var videoUrl = phantom.args[0];
+var videoUrl = "http://v.youku.com/v_show/id_XMTc3NDkwOTE2MA==.html?spm=a2hww.20023042.m_223465.5~5~5~5~5~5~A&from=y1.3-idx-beta-1519-23042.223465.1-1"
 var videoTitle = null;
 var playVideo = null;
 window.setTimeout(function(){
@@ -18,19 +18,20 @@ window.setInterval(function(){
     }	
 }, 1000);
 
-
+page.onConsoleMessage = function (msg) {
+    console.log('Page console msg: ' + msg);
+};
 page.open(videoUrl , function () {
     videoTitle = page.title;
     if(page.url.indexOf("youku.com") != -1){
         console.log("in youku.com");
-        // page.evaluate(function() {
-        //     console.log("in evaluate function");
-        //     playVideo = document.getElementById('sMain');  
-        //     playVideo.click();
-        //     console.log(playVideo);
-        // });
-        // playVideo = document.getElementById('sMain').textContent;
-        // console.log("in youku.com");
+        page.evaluate(function() {
+            console.log("in evaluate function");
+            playVideo = document.getElementById('sMain');  
+            playVideo.click();
+            console.log(playVideo);
+        });
+        console.log("in youku.com");
         
         //it is from youku.com
         //find the player div
@@ -38,6 +39,17 @@ page.open(videoUrl , function () {
     console.log("finish load");
     console.log("video title: " + videoTitle);
 });
+
+
+page.onResourceRequested = function (request) {
+    
+    console.log('Request ' + JSON.stringify(request, undefined, 4));
+};
+page.onResourceReceived = function (response) {
+    console.log('Receive ' + JSON.stringify(response, undefined, 4));
+};
+
+
 
 //TODO: click the right for player faster.
 // window.setInterval(function(){

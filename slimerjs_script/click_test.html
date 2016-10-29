@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="divId" style="width: 200px; height: 200px; background-color: #0000cc" >
+        <article>
+            <p style="background-color: #1cc09f">hello</p>
+            <p style="background-color: #1cc09f">hello</p>
+        </article>
+
+    </div>
+    <a>
+        aaaaaa
+        <p>hello</p>
+    </a>
+    <input type="text" id="inputId" name="">
+</body>
+<script src="./jquery.min.js"></script>
+<script>
+    $("div").click(function (e) {
+        console.log('click div');
+        //alert("click div");
+    });
+    $("p").click(function (e) {
+        console.log('click p');
+        //alert("click p");
+        //return false; // 使得div的点击事件消失
+    });
+
+    $(document).keydown(function(event){
+        console.log("doc keydown");
+        console.log(event.keyCode);
+    }); 
+    $(document).keypress(function(event){
+        console.log("doc keypress");
+        console.log(event.keyCode);
+    }); 
+    $("div").keypress(function(){
+        console.log("div keypress")
+    });
+
+    $("#inputId").keypress(function(event){
+        console.log("input keypress");
+    }); 
+    // window.setInterval(function(){
+    //    console.log("keydown timeout");
+    // //    // $("p").keypress();
+    // //    // $("p").keydown();
+    // //    // $("#inputId").keydown();
+    //     var ev = document.createEvent("KeyboardEvent");
+    //     ev.initKeyEvent("keydown",       // typeArg,                                              
+    //        true,             // canBubbleArg,
+    //        true,             // cancelableArg,
+    //        null,             // viewArg,  Specifies UIEvent.view. This value may be null. 
+    //        false,            // ctrlKeyArg,
+    //        false,            // altKeyArg,  
+    //        false,            // shiftKeyArg,
+    //        false,            // metaKeyArg,
+    //        9,               // keyCodeArg,
+    //        0);              // charCodeArg);
+    //     document.querySelector("a").dispatchEvent(ev);
+    //     //$("a").trigger("keydown")
+    //     //$("a").keydown();
+    // },  5000);
+//    $("article").click(function () {
+//        console.log("click article")
+//    });
+    // $("button").click(function (e) {
+    //     console.log('click button');
+    // })
+</script>
+</html>
